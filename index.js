@@ -22,6 +22,10 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         const VegetableCollection = client.db('AgroFarm').collection('VegetableCollection')
+        const GrainOilCollection = client.db('AgroFarm').collection('GrainOilCollection')
+        const FishCollection = client.db('AgroFarm').collection('FishCollection')
+        const FruitCollection = client.db('AgroFarm').collection('FruitCollection')
+        const MemberCollection = client.db('AgroFarm').collection('MemberCollection')
 
 
         app.get('/products', async (req, res) => {
@@ -30,12 +34,64 @@ async function run() {
             const result = await cursor.toArray()
             res.send(result)
         })
+        app.get('/productsGrainOil', async (req, res) => {
+            const query = {}
+            const cursor = GrainOilCollection.find(query).sort({ _id: -1 });
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+        app.get('/productsFish', async (req, res) => {
+            const query = {}
+            const cursor = FishCollection.find(query).sort({ _id: -1 });
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+        app.get('/productsFruit', async (req, res) => {
+            const query = {}
+            const cursor = FruitCollection.find(query).sort({ _id: -1 });
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+        app.get('/Members', async (req, res) => {
+            const query = {}
+            const cursor = MemberCollection.find(query);
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+
+
+
+
 
         app.post('/uploadVegetableProduct', async (req, res) => {
             const query = req.body;
             const result = await VegetableCollection.insertOne(query)
             res.send(result)
         })
+        app.post('/uploadGrainProduct', async (req, res) => {
+            const query = req.body;
+            const result = await GrainOilCollection.insertOne(query)
+            res.send(result)
+        })
+        app.post('/uploadFishProduct', async (req, res) => {
+            const query = req.body;
+            const result = await FishCollection.insertOne(query)
+            res.send(result)
+        })
+        app.post('/uploadFruitProduct', async (req, res) => {
+            const query = req.body;
+            const result = await FruitCollection.insertOne(query)
+            res.send(result)
+        })
+        app.post('/uploadMembers', async (req, res) => {
+            const query = req.body;
+            const result = await MemberCollection.insertOne(query)
+            res.send(result)
+        })
+
+
+
+
 
         app.delete('/deleteProducts/:id', async (req, res) => {
             const id = req.params.id;
@@ -43,6 +99,38 @@ async function run() {
                 _id: new ObjectId(id)
             }
             const result = await VegetableCollection.deleteOne(query)
+            res.send(result);
+        })
+        app.delete('/deleteGrainProducts/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {
+                _id: new ObjectId(id)
+            }
+            const result = await GrainOilCollection.deleteOne(query)
+            res.send(result);
+        })
+        app.delete('/deleteFishProducts/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {
+                _id: new ObjectId(id)
+            }
+            const result = await FishCollection.deleteOne(query)
+            res.send(result);
+        })
+        app.delete('/deleteFruitProducts/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {
+                _id: new ObjectId(id)
+            }
+            const result = await FruitCollection.deleteOne(query)
+            res.send(result);
+        })
+        app.delete('/deleteMembers/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {
+                _id: new ObjectId(id)
+            }
+            const result = await MemberCollection.deleteOne(query)
             res.send(result);
         })
 
