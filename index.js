@@ -26,6 +26,7 @@ async function run() {
         const FishCollection = client.db('AgroFarm').collection('FishCollection')
         const FruitCollection = client.db('AgroFarm').collection('FruitCollection')
         const MemberCollection = client.db('AgroFarm').collection('MemberCollection')
+        const BlogCollection = client.db('AgroFarm').collection('BlogCollection')
 
 
         app.get('/products', async (req, res) => {
@@ -58,6 +59,12 @@ async function run() {
             const result = await cursor.toArray()
             res.send(result)
         })
+        app.get('/blogs', async (req, res) => {
+            const query = {}
+            const cursor = BlogCollection.find(query).sort({ _id: -1 });
+            const result = await cursor.toArray()
+            res.send(result)
+        })
 
 
 
@@ -86,6 +93,11 @@ async function run() {
         app.post('/uploadMembers', async (req, res) => {
             const query = req.body;
             const result = await MemberCollection.insertOne(query)
+            res.send(result)
+        })
+        app.post('/uploadBlog', async (req, res) => {
+            const query = req.body;
+            const result = await BlogCollection.insertOne(query)
             res.send(result)
         })
 
@@ -131,6 +143,14 @@ async function run() {
                 _id: new ObjectId(id)
             }
             const result = await MemberCollection.deleteOne(query)
+            res.send(result);
+        })
+        app.delete('/deleteBlog/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {
+                _id: new ObjectId(id)
+            }
+            const result = await BlogCollection.deleteOne(query)
             res.send(result);
         })
 
