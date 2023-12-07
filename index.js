@@ -7,8 +7,8 @@ const port = process.env.PORT || 5000
 
 app.use(express.json())
 app.use(cors())
+const uri = `mongodb+srv://${process.env.DB_User}:${process.env.DB_Pass}@cluster0.nvhn6jw.mongodb.net/?retryWrites=true&w=majority`;
 
-const uri = `mongodb+srv://${process.env.DB_User}:${process.env.DB_Pass}@cluster0.4jznvny.mongodb.net/?retryWrites=true&w=majority`;
 console.log((uri))
 
 const client = new MongoClient(uri, {
@@ -27,6 +27,7 @@ async function run() {
         const FruitCollection = client.db('AgroFarm').collection('FruitCollection')
         const MemberCollection = client.db('AgroFarm').collection('MemberCollection')
         const BlogCollection = client.db('AgroFarm').collection('BlogCollection')
+        const UserCollection = client.db('AgroFarm').collection('UserCollection')
 
 
         app.get('/products', async (req, res) => {
@@ -65,7 +66,12 @@ async function run() {
             const result = await cursor.toArray()
             res.send(result)
         })
-
+        app.get('/alluser/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email };
+            const user = await UserCollection.findOne(query);
+            res.send({ isAdmin: user?.role === 'admin' });
+        })
 
 
 
@@ -98,6 +104,11 @@ async function run() {
         app.post('/uploadBlog', async (req, res) => {
             const query = req.body;
             const result = await BlogCollection.insertOne(query)
+            res.send(result)
+        })
+        app.post('/addUser', async (req, res) => {
+            const query = req.body;
+            const result = await UserCollection.insertOne(query)
             res.send(result)
         })
 
