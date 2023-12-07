@@ -66,11 +66,24 @@ async function run() {
             const result = await cursor.toArray()
             res.send(result)
         })
+        app.get('/alluser', async (req, res) => {
+            const query = {}
+            const cursor = UserCollection.find(query).sort({ _id: -1 });
+            const result = await cursor.toArray()
+            res.send(result)
+        })
         app.get('/alluser/admin/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email };
             const user = await UserCollection.findOne(query);
             res.send({ isAdmin: user?.role === 'admin' });
+        })
+        app.get('/alluser/check/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email };
+            const user = await UserCollection.findOne(query);
+            // console.log(user)
+            res.send({ isCheck: user?.stay === `yes` });
         })
 
 
