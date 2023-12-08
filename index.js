@@ -127,6 +127,21 @@ async function run() {
 
 
 
+        app.put('/alluser/admin/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    role: 'admin'
+                }
+            }
+            const result = await UserCollection.updateOne(filter, updateDoc, options)
+            res.send(result);
+
+
+        })
+
 
 
         app.delete('/deleteProducts/:id', async (req, res) => {
@@ -167,6 +182,14 @@ async function run() {
                 _id: new ObjectId(id)
             }
             const result = await MemberCollection.deleteOne(query)
+            res.send(result);
+        })
+        app.delete('/deleteUsers/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {
+                _id: new ObjectId(id)
+            }
+            const result = await UserCollection.deleteOne(query)
             res.send(result);
         })
         app.delete('/deleteBlog/:id', async (req, res) => {
